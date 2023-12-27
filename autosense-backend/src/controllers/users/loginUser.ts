@@ -17,12 +17,14 @@ export const loginValidator = () => {
       .isEmail()
       .withMessage("Email is not correct")
       .custom(async (value) => {
-        const domain = value.split("@")[1];
-        try {
-          await dns.promises.resolveMx(domain);
-          return true;
-        } catch (err) {
-          throw new Error("Email domain is not valid");
+        if (value){
+          const domain = value.split("@")[1];
+          try {
+            await dns.promises.resolveMx(domain);
+            return true;
+          } catch (err) {
+            throw new Error("Email domain is not valid");
+          }
         }
       }),
     body("password").notEmpty().withMessage("Password is required"),
